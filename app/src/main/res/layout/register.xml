@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
-    tools:context=".MainActivity">
+    tools:context=".Register">
 
     <LinearLayout
         android:id="@+id/id_auth"
@@ -36,15 +36,7 @@
             android:inputType="textPassword"
             android:paddingLeft="25dp"
             android:textSize="12sp" />
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/bg_btn"
-            android:text="LOGIN"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
+
         <Button
             android:id="@+id/btn_register"
             android:layout_width="match_parent"
@@ -52,6 +44,15 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/bg_btn"
             android:text="Register"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_btn"
+            android:text="Click to login"
             android:textColor="@color/white"
             android:textSize="12sp" />
     </LinearLayout>
