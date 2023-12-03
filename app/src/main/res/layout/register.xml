@@ -17,15 +17,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/id_nama"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_input"
+            android:hint="Name"
+            android:inputType="text"
+            android:paddingLeft="25dp"
+            android:textSize="12sp" />
+
         <EditText
             android:id="@+id/id_email"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/bg_input"
             android:hint="Email Address"
             android:inputType="textEmailAddress"
             android:paddingLeft="25dp"
             android:textSize="12sp" />
+
         <EditText
             android:id="@+id/id_password"
             android:layout_width="match_parent"

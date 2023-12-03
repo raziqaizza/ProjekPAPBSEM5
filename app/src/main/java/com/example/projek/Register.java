@@ -12,15 +12,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.projek.databinding.LoginBinding;
 import com.example.projek.databinding.RegisterBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Register extends AppCompatActivity {
+    public static final String TAG = "TAG";
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     RegisterBinding binding;
+    String userID;
+    FirebaseFirestore fStore;
 
     @Override
     public void onStart() {
@@ -42,12 +51,15 @@ public class Register extends AppCompatActivity {
         Intent intent = getIntent();
         //Auth
         mAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
         binding.btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email, password;
                 email = binding.idEmail.getText().toString();
                 password = binding.idPassword.getText().toString();
+                String name = binding.idNama.getText().toString();
+
                 if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(Register.this, "Email dan Password tidak boleh kosong", Toast.LENGTH_SHORT).show();
                 }
@@ -59,6 +71,17 @@ public class Register extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Toast.makeText(Register.this, "Account created.",
                                             Toast.LENGTH_SHORT).show();
+                                    userID = mAuth.getUid();
+                                    DocumentReference documentReference = fStore.collection("users").document(userID);
+                                    Map<String,Object> user = new HashMap<>();
+                                    user.put("name", name);
+                                    user.put("email", email);
+                                    documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d(TAG, "onSuccess: user Profile is created for " + userID);
+                                        }
+                                    });
                                 } else {
                                     // If sign in fails, display a message to the user.
 
