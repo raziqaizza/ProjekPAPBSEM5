@@ -44,7 +44,7 @@
                 app:srcCompat="@drawable/list" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/title"
                 android:layout_width="352dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="8dp"

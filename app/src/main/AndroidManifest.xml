@@ -31,6 +31,16 @@
             android:exported="false">
 
         </activity>
+        <activity
+            android:name=".MyAdapter"
+            android:exported="false">
+
+        </activity>
+        <activity
+            android:name=".Task"
+            android:exported="false">
+
+        </activity>
     </application>
 
 </manifest>
