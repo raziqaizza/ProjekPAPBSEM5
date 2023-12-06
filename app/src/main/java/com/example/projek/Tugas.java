@@ -1,14 +1,7 @@
 package com.example.projek;
 
-public class Task {
+public class Tugas {
     String title;
-
-    public Task() {
-    }
-
-    public Task(String title, String description) {
-        this.title = title;
-    }
 
     public String getTitle() {
         return title;

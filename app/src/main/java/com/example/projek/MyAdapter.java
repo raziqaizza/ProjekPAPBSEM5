@@ -1,6 +1,7 @@
 package com.example.projek;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.projek.databinding.HomeBinding;
+import com.example.projek.databinding.LayoutItemBinding;
 
 
 import com.google.firebase.firestore.auth.User;
@@ -17,12 +21,15 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     Context context;
-    ArrayList<Task> taskArrayList;
+    ArrayList<Tugas> tugasArrayList;
 
-    public MyAdapter(Context context, ArrayList<Task> taskArrayList) {
+
+    public MyAdapter(Context context, ArrayList<Tugas> tugasArrayList) {
         this.context = context;
-        this.taskArrayList = taskArrayList;
+        this.tugasArrayList = tugasArrayList;
     }
+
+
 
     @NonNull
     @Override
@@ -34,21 +41,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyAdapter.MyViewHolder holder, int position) {
-        Task task =  taskArrayList.get(position);
+        Tugas tugas = tugasArrayList.get(position);
+        holder.title.setText(tugas.getTitle());
 
-        holder.title.setText(task.title);
+        Log.d("Onbind" , "data ke : " + position);
+        Log.d("OnBind", "title " + tugas.title);
     }
 
     @Override
     public int getItemCount() {
-        return taskArrayList.size();
+        Log.d("ItemCount", "Jumlah data" + tugasArrayList.size());
+        return tugasArrayList.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         TextView title;
+        LayoutItemBinding binding;
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.title);
+            binding = LayoutItemBinding.bind(itemView);
+            title = binding.title;
         }
     }
 }
