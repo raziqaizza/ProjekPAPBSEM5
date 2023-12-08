@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Home extends AppCompatActivity {
-    FirebaseAuth auth;
+    FirebaseAuth fAuth;
     FirebaseUser user;
     HomeBinding binding;
     TextView result;
@@ -47,7 +47,6 @@ public class Home extends AppCompatActivity {
     MyAdapter myAdapter;
     FirebaseFirestore fStore;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +54,10 @@ public class Home extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        auth = FirebaseAuth.getInstance();
+        fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        user = auth.getCurrentUser();
-        userID = auth.getCurrentUser().getUid();
+        user = fAuth.getCurrentUser();
+        userID = fAuth.getCurrentUser().getUid();
 
         tugasArrayList = new ArrayList<Tugas>();
 
@@ -115,8 +114,7 @@ public class Home extends AppCompatActivity {
     }
 
     private void loadData() {
-        userID = auth.getCurrentUser().getUid();
-
+        userID = fAuth.getCurrentUser().getUid();
 
         fStore.collection("users").document(userID).collection("task")
                 .orderBy("title", Query.Direction.ASCENDING).addSnapshotListener(((value, error) -> {
@@ -124,7 +122,6 @@ public class Home extends AppCompatActivity {
                         Toast.makeText(this, "Chapter Loaded", Toast.LENGTH_SHORT).show();
                         return;
                     }
-
                     for (int i = 0;  i< Objects.requireNonNull(value).getDocumentChanges().size(); i++){
                         DocumentChange dc = Objects.requireNonNull(value).getDocumentChanges().get(i);
                         if (dc.getType() == DocumentChange.Type.ADDED) {
