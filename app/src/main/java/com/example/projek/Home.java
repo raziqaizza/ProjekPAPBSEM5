@@ -104,6 +104,14 @@ public class Home extends AppCompatActivity {
                 finish();
             }
         });
+
+        binding.btnNewtask.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), NewTask.class));
+                finish();
+            }
+        });
     }
 
     private void loadData() {

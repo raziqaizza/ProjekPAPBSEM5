@@ -37,9 +37,12 @@
 
         </activity>
         <activity
-            android:name=".Task"
+            android:name=".Tugas"
             android:exported="false">
-
+        </activity>
+        <activity
+            android:name=".NewTask"
+            android:exported="false">
         </activity>
     </application>
 
