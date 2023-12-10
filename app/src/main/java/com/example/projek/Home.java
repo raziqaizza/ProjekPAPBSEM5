@@ -36,14 +36,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Home extends AppCompatActivity {
+public class Home extends AppCompatActivity implements ClickEvent{
     FirebaseAuth fAuth;
     FirebaseUser user;
     HomeBinding binding;
     TextView result;
     String userID;
     RecyclerView recyclerView;
-    ArrayList<Tugas> tugasArrayList;
+    ArrayList<Tugas> tugasArrayList = new ArrayList<Tugas>();;
     MyAdapter myAdapter;
     FirebaseFirestore fStore;
 
@@ -59,17 +59,14 @@ public class Home extends AppCompatActivity {
         user = fAuth.getCurrentUser();
         userID = fAuth.getCurrentUser().getUid();
 
-        tugasArrayList = new ArrayList<Tugas>();
-
         recyclerView = binding.idRecyclerView;
         recyclerView.setHasFixedSize(true);
 
         loadData();
 
         myAdapter = new MyAdapter(Home.this, tugasArrayList);
-
-        recyclerView.setAdapter(myAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(myAdapter);
 
         result = binding.idUser;
 
@@ -110,6 +107,13 @@ public class Home extends AppCompatActivity {
                 finish();
             }
         });
+
+        binding.idRecyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("CLICKED", "gg");
+            }
+        });
     }
 
     //Load data dari database
@@ -136,5 +140,9 @@ public class Home extends AppCompatActivity {
                 }));
     }
 
-
+    @Override
+    public void OnClick(int pos) {
+        startActivity(new Intent(getApplicationContext(), EditTask.class));
+        finish();
+    }
 }

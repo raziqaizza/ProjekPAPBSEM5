@@ -44,6 +44,10 @@
             android:name=".NewTask"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".EditTask"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>

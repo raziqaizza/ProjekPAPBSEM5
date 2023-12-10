@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,14 +17,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-public class NewTask extends AppCompatActivity {
+public class EditTask extends AppCompatActivity {
     NewtaskBinding binding;
     FirebaseUser fUser;
     FirebaseAuth fAuth;
@@ -72,19 +76,6 @@ public class NewTask extends AppCompatActivity {
         CollectionReference collectionReference = fStore.collection("user").document(userID).collection("task");
 
         fStore.collection("users").document(userID).collection("task")
-                .add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("task UserID", "title : "+ title);
-                        Log.d("ADD DATA", "Document Snapshot written with ID: " + documentReference.getId());
-                        Log.d("ADD DATA", "Document Snapshot written with Parent: " + documentReference.getParent());
-                        finish();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("err add data", "Error adding document", e);
-                    }
-                });
+                .get();
     }
 }
