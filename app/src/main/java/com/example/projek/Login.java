@@ -34,12 +34,10 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
         binding = LoginBinding.inflate(getLayoutInflater());
         mAuth = FirebaseAuth.getInstance();
         View view = binding.getRoot();
         setContentView(view);
-
 
         //Login Button
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {

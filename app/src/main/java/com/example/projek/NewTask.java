@@ -45,8 +45,8 @@ public class NewTask extends AppCompatActivity {
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String inputData = binding.list.getText().toString();
-                String inputTitle = binding.editTitle.getText().toString();
+                String inputData = binding.idEditDescription.getText().toString();
+                String inputTitle = binding.idEditTitle.getText().toString();
 
                 saveData(inputTitle, inputData);
                 startActivity(new Intent(getApplicationContext(), Home.class));
@@ -54,6 +54,8 @@ public class NewTask extends AppCompatActivity {
             }
         });
     }
+
+    //Function untuk save data
     private void saveData(String title, String taskData){
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);

@@ -23,13 +23,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     Context context;
     ArrayList<Tugas> tugasArrayList;
 
-
     public MyAdapter(Context context, ArrayList<Tugas> tugasArrayList) {
         this.context = context;
         this.tugasArrayList = tugasArrayList;
     }
-
-
 
     @NonNull
     @Override
@@ -61,7 +58,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             binding = LayoutItemBinding.bind(itemView);
-            title = binding.title;
+            title = binding.idList;
         }
     }
 }

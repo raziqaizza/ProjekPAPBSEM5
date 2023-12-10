@@ -7,46 +7,26 @@
 
     <LinearLayout
         android:id="@+id/contact_layout"
-        android:layout_width="383dp"
-        android:layout_height="43dp"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/bg_input"
+        android:background="@drawable/bg_list"
         android:orientation="horizontal"
         android:padding="15dp"
+        android:outlineAmbientShadowColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="354dp"
-            android:layout_height="12dp">
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="+62123456789"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.466"
-                app:srcCompat="@drawable/list" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <TextView
+            android:id="@+id/id_List"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Things to do" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -61,7 +61,7 @@ public class Home extends AppCompatActivity {
 
         tugasArrayList = new ArrayList<Tugas>();
 
-        recyclerView = binding.recyclerView;
+        recyclerView = binding.idRecyclerView;
         recyclerView.setHasFixedSize(true);
 
         loadData();
@@ -71,7 +71,7 @@ public class Home extends AppCompatActivity {
         recyclerView.setAdapter(myAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        result = binding.user;
+        result = binding.idUser;
 
         DocumentReference documentReference = fStore.collection("users").document(userID);
 
@@ -84,16 +84,14 @@ public class Home extends AppCompatActivity {
             }
         });
 
+        //Cek apabila sudah ada yang login atau belum
         if (user == null) {
             Intent intent = new Intent(getApplicationContext(), Login.class);
             startActivity(intent);
             finish();
         }
-//        Intent dataIntent = getIntent();
-//        String data = dataIntent.getStringExtra("email");
-//        result = binding.user;
-//        result.setText(data);
 
+        //Logout button
         binding.idLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,7 +102,8 @@ public class Home extends AppCompatActivity {
             }
         });
 
-        binding.btnNewtask.setOnClickListener(new View.OnClickListener(){
+        //New Task Button
+        binding.btnNewTask.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), NewTask.class));
@@ -113,9 +112,9 @@ public class Home extends AppCompatActivity {
         });
     }
 
+    //Load data dari database
     private void loadData() {
         userID = fAuth.getCurrentUser().getUid();
-
         fStore.collection("users").document(userID).collection("task")
                 .orderBy("title", Query.Direction.ASCENDING).addSnapshotListener(((value, error) -> {
                     if (error != null){
