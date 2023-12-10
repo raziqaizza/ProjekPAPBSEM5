@@ -6,8 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,9 +19,11 @@ import com.example.projek.databinding.LayoutItemBinding;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
@@ -56,17 +60,32 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         Log.d("Onbind" , "data ke : " + position);
         Log.d("OnBind", "title " + tugas.title);
 
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fAuth = FirebaseAuth.getInstance();
+                fStore = FirebaseFirestore.getInstance();
+                String userID = fAuth.getCurrentUser().getUid();
+
+                fStore.collection("users").document(userID).collection("task")
+                        .document(tugasArrayList.get(holder.getAdapterPosition()).getUid()).delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(context.getApplicationContext(), "SLEBEW", Toast.LENGTH_SHORT).show();
+                                tugasArrayList.remove(holder.getAdapterPosition());
+                                notifyItemRemoved(holder.getAdapterPosition());
+                            }
+                        });
+            }
+        });
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fAuth = FirebaseAuth.getInstance();
                 fStore = FirebaseFirestore.getInstance();
-                String UserID = fAuth.getCurrentUser().getUid();
-                CollectionReference cr = fStore.collection("users").document(UserID).collection("task");
-
+                String userID = fAuth.getCurrentUser().getUid();
                 context.startActivity(new Intent(context, EditTask.class));
-                Log.d("PLER", "keclick posisi ke : " + holder.getAdapterPosition());
-//                clickEvent.OnClick(position);
             }
         });
     }
@@ -81,6 +100,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         TextView title;
         LinearLayout layout;
         LayoutItemBinding binding;
+        ImageView delete;
 
 
         public MyViewHolder(@NonNull View itemView) {
@@ -88,6 +108,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             binding = LayoutItemBinding.bind(itemView);
             layout = binding.contactLayout;
             title = binding.idList;
+            delete = binding.delete;
         }
     }
 

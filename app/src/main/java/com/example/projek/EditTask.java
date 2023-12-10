@@ -46,6 +46,8 @@ public class EditTask extends AppCompatActivity {
 
         userID = fAuth.getCurrentUser().getUid();
 
+        Task task = (Task) getIntent().getSerializableExtra("task");
+
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class NewTask extends AppCompatActivity {
     NewtaskBinding binding;
@@ -29,6 +30,7 @@ public class NewTask extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID, taskID;
+    DocumentSnapshot ds;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,20 +66,20 @@ public class NewTask extends AppCompatActivity {
     }
 
     //Function untuk save data
-    private void saveData(String title, String taskData){
+    private void saveData(String title, String desc){
         Map<String, Object> data = new HashMap<>();
+        String uid = UUID.randomUUID().toString();
+
+        data.put("uid", uid);
         data.put("title", title);
-        data.put("taskData", taskData);
+        data.put("desc", desc);
 
-        CollectionReference collectionReference = fStore.collection("user").document(userID).collection("task");
-
-        fStore.collection("users").document(userID).collection("task")
-                .add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        CollectionReference collectionReference = fStore.collection("users").document(userID).collection("task");
+        collectionReference.document(uid).set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
+                    public void onComplete(@NonNull Task<Void> task) {
                         Log.d("task UserID", "title : "+ title);
-                        Log.d("ADD DATA", "Document Snapshot written with ID: " + documentReference.getId());
-                        Log.d("ADD DATA", "Document Snapshot written with Parent: " + documentReference.getParent());
+                        Log.d("ADD DATA", "Document Snapshot written with ID: " + collectionReference.document(uid).getId());
                         finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {

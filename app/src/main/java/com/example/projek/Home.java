@@ -136,6 +136,11 @@ public class Home extends AppCompatActivity implements ClickEvent{
                             Log.d("Fetch", "loadData: " + dc.getDocument());
                             myAdapter.notifyDataSetChanged();
                         }
+
+                        // BELOM KELAR INI COYYYYYYYYYYYYYYYYYYYYYY
+                        if (dc.getType() == DocumentChange.Type.REMOVED){
+
+                        }
                     }
                 }));
     }
