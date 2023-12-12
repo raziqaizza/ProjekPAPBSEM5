@@ -1,15 +1,15 @@
 package com.example.projek;
 
-public class Tugas {
+public class Task {
     String title, uid, desc;
 
-    public Tugas(String title, String uid, String desc) {
+    public Task(String title, String uid, String desc) {
         this.title = title;
         this.uid = uid;
         this.desc = desc;
     }
 
-    public Tugas() {
+    public Task() {
     }
 
     public String getTitle() {

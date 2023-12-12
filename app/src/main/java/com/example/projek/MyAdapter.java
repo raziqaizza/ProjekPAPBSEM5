@@ -1,5 +1,6 @@
 package com.example.projek;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -14,35 +15,28 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projek.databinding.HomeBinding;
 import com.example.projek.databinding.LayoutItemBinding;
 
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     Context context;
-    ArrayList<Tugas> tugasArrayList;
+    ArrayList<Task> taskArrayList;
     ClickEvent clickEvent;
     FirebaseFirestore fStore;
     FirebaseAuth fAuth;
 
     private static ClickListener clickListener;
 
-    public MyAdapter(Context context, ArrayList<Tugas> tugasArrayList) {
+    public MyAdapter(Context context, ArrayList<Task> taskArrayList) {
         this.context = context;
-        this.tugasArrayList = tugasArrayList;
+        this.taskArrayList = taskArrayList;
     }
 
     @NonNull
@@ -54,11 +48,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyAdapter.MyViewHolder holder, int position) {
-        Tugas tugas = tugasArrayList.get(position);
-        holder.title.setText(tugas.getTitle());
-        Log.d("Onbind" , "data ke : " + position);
-        Log.d("OnBind", "title " + tugas.title);
+    public void onBindViewHolder(@NonNull MyAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        Task task = taskArrayList.get(position);
+        holder.title.setText(task.getTitle());
+
 
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,12 +61,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 String userID = fAuth.getCurrentUser().getUid();
 
                 fStore.collection("users").document(userID).collection("task")
-                        .document(tugasArrayList.get(holder.getAdapterPosition()).getUid()).delete()
+                        .document(taskArrayList.get(holder.getAdapterPosition()).getUid()).delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
                                 Toast.makeText(context.getApplicationContext(), "SLEBEW", Toast.LENGTH_SHORT).show();
-                                tugasArrayList.remove(holder.getAdapterPosition());
+                                taskArrayList.remove(holder.getAdapterPosition());
                                 notifyItemRemoved(holder.getAdapterPosition());
                             }
                         });
@@ -84,16 +77,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             public void onClick(View v) {
                 fAuth = FirebaseAuth.getInstance();
                 fStore = FirebaseFirestore.getInstance();
-                String userID = fAuth.getCurrentUser().getUid();
-                context.startActivity(new Intent(context, EditTask.class));
+
+                String uid, title, desc;
+                uid = taskArrayList.get(position).getUid();
+                title = taskArrayList.get(position).getTitle();
+                desc = taskArrayList.get(position).getDesc();
+
+                Intent intent = new Intent(context, EditTask.class);
+
+                intent.putExtra("pUID", uid);
+                intent.putExtra("pTitle", title);
+                intent.putExtra("pDesc", desc);
+
+                context.startActivity(intent);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        Log.d("ItemCount", "Jumlah data" + tugasArrayList.size());
-        return tugasArrayList.size();
+        Log.d("ItemCount", "Jumlah data" + taskArrayList.size());
+        return taskArrayList.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{

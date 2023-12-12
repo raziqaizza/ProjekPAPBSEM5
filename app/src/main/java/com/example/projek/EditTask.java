@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,27 +11,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.projek.databinding.NewtaskBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class EditTask extends AppCompatActivity {
     NewtaskBinding binding;
     FirebaseUser fUser;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
-    String userID, taskID;
+    String userID, pUID, pTitle, pDesc;
+    MyAdapter myAdapter;
+    ArrayList<Task> taskArrayList = new ArrayList<Task>();;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +42,18 @@ public class EditTask extends AppCompatActivity {
 
         userID = fAuth.getCurrentUser().getUid();
 
-        Task task = (Task) getIntent().getSerializableExtra("task");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null){
+            pUID = bundle.getString("pUID");
+            pTitle = bundle.getString("pTitle");
+            pDesc = bundle.getString("pDesc");
+
+            binding.idEditTitle.setText(pTitle);
+            binding.idEditDescription.setText(pDesc);
+        }
+
+
+        com.google.android.gms.tasks.Task task = (com.google.android.gms.tasks.Task) getIntent().getSerializableExtra("task");
 
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,14 +77,26 @@ public class EditTask extends AppCompatActivity {
     }
 
     //Function untuk save data
-    private void saveData(String title, String taskData){
+    private void saveData(String title, String desc){
         Map<String, Object> data = new HashMap<>();
+        data.put("uid", pUID);
         data.put("title", title);
-        data.put("taskData", taskData);
+        data.put("desc", desc);
 
-        CollectionReference collectionReference = fStore.collection("user").document(userID).collection("task");
+        DocumentReference dr = fStore.collection("users").document(userID).collection("task").document(pUID);
 
-        fStore.collection("users").document(userID).collection("task")
-                .get();
+        dr.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                        Log.d("task UserID", "title : "+ title);
+                        Log.d("ADD DATA", "Document Snapshot written with ID: " + dr.getId());
+                        finish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("err add data", "Error adding document", e);
+            }
+        });
     }
 }

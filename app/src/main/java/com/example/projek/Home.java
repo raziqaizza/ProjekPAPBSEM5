@@ -18,9 +18,6 @@ import com.example.projek.databinding.HomeBinding;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
-import com.example.projek.Tugas;
-
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -32,8 +29,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 public class Home extends AppCompatActivity implements ClickEvent{
@@ -43,7 +38,7 @@ public class Home extends AppCompatActivity implements ClickEvent{
     TextView result;
     String userID;
     RecyclerView recyclerView;
-    ArrayList<Tugas> tugasArrayList = new ArrayList<Tugas>();;
+    ArrayList<Task> taskArrayList = new ArrayList<Task>();;
     MyAdapter myAdapter;
     FirebaseFirestore fStore;
 
@@ -64,7 +59,7 @@ public class Home extends AppCompatActivity implements ClickEvent{
 
         loadData();
 
-        myAdapter = new MyAdapter(Home.this, tugasArrayList);
+        myAdapter = new MyAdapter(Home.this, taskArrayList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(myAdapter);
 
@@ -74,7 +69,7 @@ public class Home extends AppCompatActivity implements ClickEvent{
 
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(@NonNull com.google.android.gms.tasks.Task<DocumentSnapshot> task) {
                 DocumentSnapshot data = task.getResult();
                 result.setText("Hi, " + data.getString("name"));
                 Log.d("Data Nama", "Nama : "+ data.getString("name"));
@@ -128,10 +123,10 @@ public class Home extends AppCompatActivity implements ClickEvent{
                     for (int i = 0;  i< Objects.requireNonNull(value).getDocumentChanges().size(); i++){
                         DocumentChange dc = Objects.requireNonNull(value).getDocumentChanges().get(i);
                         if (dc.getType() == DocumentChange.Type.ADDED) {
-                            tugasArrayList.add(dc.getDocument().toObject(Tugas.class));
+                            taskArrayList.add(dc.getDocument().toObject(Task.class));
                             myAdapter.getItemCount();
-                            for (int j = 0; j < tugasArrayList.size(); j++) {
-                                Log.d("Data", "Data : "  + j + tugasArrayList.get(j).getTitle());
+                            for (int j = 0; j < taskArrayList.size(); j++) {
+                                Log.d("Data", "Data : "  + j + taskArrayList.get(j).getTitle());
                             }
                             Log.d("Fetch", "loadData: " + dc.getDocument());
                             myAdapter.notifyDataSetChanged();
