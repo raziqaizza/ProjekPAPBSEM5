@@ -35,6 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -44,6 +45,7 @@ public class NewTask extends AppCompatActivity {
     FirebaseUser fUser;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
+
     StorageReference storageReference;
     Uri image;
     ImageView imageView;
@@ -84,10 +86,14 @@ public class NewTask extends AppCompatActivity {
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadImage(image);
+                if (image != null) {
+                    Toast.makeText(getApplicationContext(), "Upload task with image", Toast.LENGTH_SHORT).show();
+                    uploadImage(image);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Upload task with no image", Toast.LENGTH_SHORT).show();
+                }
                 String inputData = binding.idEditDescription.getText().toString();
                 String inputTitle = binding.idEditTitle.getText().toString();
-
 
                 saveData(inputTitle, inputData);
                 startActivity(new Intent(getApplicationContext(), Home.class));
@@ -98,11 +104,13 @@ public class NewTask extends AppCompatActivity {
         binding.btnAttach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("attach", "onClick: Clicked");
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 activityResultLauncher.launch(intent);
             }
         });
+
     }
 
     //Function untuk save data
@@ -130,15 +138,19 @@ public class NewTask extends AppCompatActivity {
                 });
     }
     private void uploadImage(Uri image) {
-        StorageReference reference = storageReference.child("images/" + UUID.randomUUID().toString());
-        reference.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference reference = storageRef.child("images/" + UUID.randomUUID().toString());
+        UploadTask uploadTask = reference.putFile(image);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("Upload Image", "onSuccess: " + uploadTask.getSnapshot());
                 Toast.makeText(NewTask.this, "Image uploaded successfully!", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                Log.d("Upload Image", "GAGAL");
                 Toast.makeText(NewTask.this, "Error uploading image", Toast.LENGTH_SHORT).show();
             }
         });
