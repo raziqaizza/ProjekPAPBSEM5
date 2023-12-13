@@ -1,9 +1,11 @@
 package com.example.projek;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,15 +13,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.projek.databinding.NewtaskBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class EditTask extends AppCompatActivity {
     NewtaskBinding binding;
@@ -76,9 +83,15 @@ public class EditTask extends AppCompatActivity {
         });
     }
 
+
     //Function untuk save data
     private void saveData(String title, String desc){
         Map<String, Object> data = new HashMap<>();
+
+//        if (image != null){
+//            data.put("imageURL", image);
+//        }
+
         data.put("uid", pUID);
         data.put("title", title);
         data.put("desc", desc);
@@ -99,6 +112,4 @@ public class EditTask extends AppCompatActivity {
             }
         });
     }
-
-
 }

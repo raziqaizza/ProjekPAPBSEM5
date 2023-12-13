@@ -83,7 +83,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 title = taskArrayList.get(position).getTitle();
                 desc = taskArrayList.get(position).getDesc();
 
-                Intent intent = new Intent(context, EditTask.class);
+                Intent intent = new Intent(context, NewTask.class);
 
                 intent.putExtra("pUID", uid);
                 intent.putExtra("pTitle", title);

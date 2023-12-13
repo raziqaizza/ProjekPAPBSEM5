@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -49,8 +50,7 @@ public class NewTask extends AppCompatActivity {
     StorageReference storageReference;
     Uri image;
     ImageView imageView;
-    String userID, taskID;
-
+    String userID, pUID, pTitle, pDesc;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
@@ -83,19 +83,30 @@ public class NewTask extends AppCompatActivity {
             }
         });
 
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null){
+            pUID = bundle.getString("pUID");
+            pTitle = bundle.getString("pTitle");
+            pDesc = bundle.getString("pDesc");
+
+            binding.idEditTitle.setText(pTitle);
+            binding.idEditDescription.setText(pDesc);
+        }
+
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (image != null) {
-                    Toast.makeText(getApplicationContext(), "Upload task with image", Toast.LENGTH_SHORT).show();
                     uploadImage(image);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Upload task with no image", Toast.LENGTH_SHORT).show();
                 }
                 String inputData = binding.idEditDescription.getText().toString();
                 String inputTitle = binding.idEditTitle.getText().toString();
 
-                saveData(inputTitle, inputData);
+                if (bundle != null) {
+                    editData(inputTitle, inputData);
+                } else {
+                    saveData(inputTitle, inputData);
+                }
                 startActivity(new Intent(getApplicationContext(), Home.class));
                 finish();
             }
@@ -116,7 +127,6 @@ public class NewTask extends AppCompatActivity {
             public void onClick(View v) {
                 if (image != null) {
                     Toast.makeText(getApplicationContext(), "Image downloaded!", Toast.LENGTH_SHORT).show();
-                    uploadImage(image);
                 } else {
                     Toast.makeText(getApplicationContext(), "No image to download", Toast.LENGTH_SHORT).show();
                 }
@@ -129,6 +139,10 @@ public class NewTask extends AppCompatActivity {
     private void saveData(String title, String desc){
         Map<String, Object> data = new HashMap<>();
         String uid = UUID.randomUUID().toString();
+
+        if (image != null){
+            data.put("imageURL", image);
+        }
 
         data.put("uid", uid);
         data.put("title", title);
@@ -168,4 +182,31 @@ public class NewTask extends AppCompatActivity {
         });
     }
 
+    private void editData(String title, String desc){
+        Map<String, Object> data = new HashMap<>();
+
+        if (image != null){
+            data.put("imageURL", image);
+        }
+
+        data.put("uid", pUID);
+        data.put("title", title);
+        data.put("desc", desc);
+
+        DocumentReference dr = fStore.collection("users").document(userID).collection("task").document(pUID);
+
+        dr.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                Log.d("task UserID", "title : "+ title);
+                Log.d("ADD DATA", "Document Snapshot written with ID: " + dr.getId());
+                finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("err add data", "Error adding document", e);
+            }
+        });
+    }
 }
