@@ -102,13 +102,6 @@ public class Home extends AppCompatActivity implements ClickEvent{
                 finish();
             }
         });
-
-        binding.idRecyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("CLICKED", "gg");
-            }
-        });
     }
 
     //Load data dari database
