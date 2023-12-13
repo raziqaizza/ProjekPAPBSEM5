@@ -1,9 +1,15 @@
 package com.example.projek;
 
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
+
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,16 +36,16 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NewTask extends AppCompatActivity {
     NewtaskBinding binding;
@@ -50,7 +56,7 @@ public class NewTask extends AppCompatActivity {
     StorageReference storageReference;
     Uri image;
     ImageView imageView;
-    String userID, pUID, pTitle, pDesc;
+    String userID, pUID, pTitle, pDesc, pImage, pImageUID, imageUID;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
@@ -84,10 +90,17 @@ public class NewTask extends AppCompatActivity {
         });
 
         Bundle bundle = getIntent().getExtras();
+
         if (bundle != null){
             pUID = bundle.getString("pUID");
             pTitle = bundle.getString("pTitle");
             pDesc = bundle.getString("pDesc");
+            pImage = bundle.getString("pImage");
+            pImageUID = bundle.getString("pImageUID");
+
+            imageView = binding.idImage;
+
+            Glide.with(getApplicationContext()).load(pImage).into(binding.idImage);
 
             binding.idEditTitle.setText(pTitle);
             binding.idEditDescription.setText(pDesc);
@@ -96,9 +109,15 @@ public class NewTask extends AppCompatActivity {
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (image != null) {
+                if (image != null){
+                    if (pImage == null){
+
+                    }else if (image.toString() != pImage){
+                        deleteOldURL(pImageUID);
+                    }
                     uploadImage(image);
                 }
+
                 String inputData = binding.idEditDescription.getText().toString();
                 String inputTitle = binding.idEditTitle.getText().toString();
 
@@ -125,8 +144,8 @@ public class NewTask extends AppCompatActivity {
         binding.btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (image != null) {
-                    Toast.makeText(getApplicationContext(), "Image downloaded!", Toast.LENGTH_SHORT).show();
+                if (pImage != null) {
+                    download(pImageUID);
                 } else {
                     Toast.makeText(getApplicationContext(), "No image to download", Toast.LENGTH_SHORT).show();
                 }
@@ -142,6 +161,7 @@ public class NewTask extends AppCompatActivity {
 
         if (image != null){
             data.put("imageURL", image);
+            data.put("imageUID", imageUID);
         }
 
         data.put("uid", uid);
@@ -164,9 +184,11 @@ public class NewTask extends AppCompatActivity {
                 });
     }
     private void uploadImage(Uri image) {
+        imageUID = UUID.randomUUID().toString();
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference reference = storageRef.child("images/" + UUID.randomUUID().toString());
+        StorageReference reference = storageRef.child("images/" + imageUID);
         UploadTask uploadTask = reference.putFile(image);
+        Log.d("IMAGE PATH", "uploadImage: " + reference.getPath());
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -187,6 +209,7 @@ public class NewTask extends AppCompatActivity {
 
         if (image != null){
             data.put("imageURL", image);
+            data.put("imageUID", imageUID);
         }
 
         data.put("uid", pUID);
@@ -208,5 +231,39 @@ public class NewTask extends AppCompatActivity {
                 Log.w("err add data", "Error adding document", e);
             }
         });
+    }
+
+    private void deleteOldURL(String url){
+        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://projekpapb-5bc29.appspot.com/images/" + url);
+        Log.d("PATH DELETED", "deleteOldURL: " + storageRef.getPath());
+        storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(NewTask.this, "OLD IMAGE DELETED", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void download(String url){
+        StorageReference imageRef = FirebaseStorage.getInstance().getReference().child("/images/" + url);
+
+        imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String slbw = uri.toString();
+                downloadImage(getApplicationContext(), "images", ".jpg", DIRECTORY_DOWNLOADS, slbw);
+            }
+        });
+    }
+
+    private void downloadImage(Context context, String fileName, String fileExtension, String destinationDirectory, String Url) {
+        DownloadManager downloadManager = (DownloadManager)context.getSystemService(Context.DOWNLOAD_SERVICE);
+        Uri uri = Uri.parse(Url);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName + fileExtension);
+
+        downloadManager.enqueue(request);
     }
 }
