@@ -111,6 +111,18 @@ public class NewTask extends AppCompatActivity {
             }
         });
 
+        binding.btnDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (image != null) {
+                    Toast.makeText(getApplicationContext(), "Image downloaded!", Toast.LENGTH_SHORT).show();
+                    uploadImage(image);
+                } else {
+                    Toast.makeText(getApplicationContext(), "No image to download", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     //Function untuk save data

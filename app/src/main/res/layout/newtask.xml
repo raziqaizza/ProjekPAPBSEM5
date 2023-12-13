@@ -38,7 +38,6 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="normal" />
-
     </LinearLayout>
 
     <EditText
@@ -68,23 +67,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/id_editTitle" />
 
-    <Button
-        android:id="@+id/btn_attach"
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="44dp"
-        android:text="Attach File"
-        android:textColor="@color/white"
-        android:textAllCaps="false"
-        android:background="@drawable/bg_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id_editDescription" />
-
     <ImageView
         android:id="@+id/id_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/id_editDescription" />
+
+    <Button
+        android:id="@+id/btn_attach"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_btn"
+        android:text="Attach File"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/id_image" />
+
+    <Button
+        android:id="@+id/btn_download"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_btn"
+        android:text="Download File"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_attach" />
