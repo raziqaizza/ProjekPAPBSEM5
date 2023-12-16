@@ -28,11 +28,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     Context context;
     ArrayList<Task> taskArrayList;
-    ClickEvent clickEvent;
     FirebaseFirestore fStore;
     FirebaseAuth fAuth;
-
-    private static ClickListener clickListener;
 
     public MyAdapter(Context context, ArrayList<Task> taskArrayList) {
         this.context = context;
@@ -65,7 +62,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
-                                Toast.makeText(context.getApplicationContext(), "SLEBEW", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context.getApplicationContext(), "Data deleted", Toast.LENGTH_SHORT).show();
                                 taskArrayList.remove(holder.getAdapterPosition());
                                 notifyItemRemoved(holder.getAdapterPosition());
                             }
@@ -114,13 +111,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             title = binding.idList;
             delete = binding.delete;
         }
-    }
-
-    public void setOnItemClickListener(MyAdapter.ClickListener clickListener) {
-        MyAdapter.clickListener = clickListener;
-    }
-
-    public interface ClickListener {
-        void onItemClick(int position, View v);
     }
 }
