@@ -31,7 +31,7 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Home extends AppCompatActivity {
+public class Home extends AppCompatActivity{
     FirebaseAuth fAuth;
     FirebaseUser user;
     HomeBinding binding;

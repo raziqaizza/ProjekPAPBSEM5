@@ -47,17 +47,17 @@ public class Register extends AppCompatActivity {
         binding = RegisterBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        Intent intent = getIntent();
+
         //Auth
         mAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         binding.btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email, password;
+                String email, password, name;
                 email = binding.idEmail.getText().toString();
                 password = binding.idPassword.getText().toString();
-                String name = binding.idNama.getText().toString();
+                name = binding.idNama.getText().toString();
 
                 if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(Register.this, "Email dan Password tidak boleh kosong", Toast.LENGTH_SHORT).show();
