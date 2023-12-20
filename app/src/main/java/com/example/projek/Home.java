@@ -31,7 +31,7 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Home extends AppCompatActivity implements ClickEvent{
+public class Home extends AppCompatActivity{
     FirebaseAuth fAuth;
     FirebaseUser user;
     HomeBinding binding;
@@ -124,18 +124,7 @@ public class Home extends AppCompatActivity implements ClickEvent{
                             Log.d("Fetch", "loadData: " + dc.getDocument());
                             myAdapter.notifyDataSetChanged();
                         }
-
-                        // BELOM KELAR INI COYYYYYYYYYYYYYYYYYYYYYY
-                        if (dc.getType() == DocumentChange.Type.REMOVED){
-
-                        }
                     }
                 }));
-    }
-
-    @Override
-    public void OnClick(int pos) {
-        startActivity(new Intent(getApplicationContext(), EditTask.class));
-        finish();
     }
 }
